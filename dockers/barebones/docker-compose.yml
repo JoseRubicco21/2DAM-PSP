@@ -1,0 +1,7 @@
+services:
+  go:
+    build: .
+    hostname: psp-go
+    volumes: 
+      - ../../code/:/app/
+    

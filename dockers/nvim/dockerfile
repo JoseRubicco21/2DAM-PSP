@@ -1,0 +1,44 @@
+FROM debian:12
+
+ENV DOTFILE_REPO="https://github.com/mmourazos/dotfiles"
+
+RUN apt-get update && apt-get install -y \
+    build-essential cmake git libboost-all-dev \
+    libgmp-dev libmpfr-dev libssl-dev \
+    pkg-config wget zlib1g-dev \
+    ninja-build gettext unzip curl
+
+#   cleanup:
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Multistage build for GoLang
+COPY --from=golang:1.13-alpine /usr/local/go/ /usr/local/go/
+ENV PATH="/usr/local/go/bin:${PATH}"
+
+# Get into root's home directory
+WORKDIR /home
+
+# Install Neovim from source. 
+RUN git clone https://github.com/neovim/neovim neovim
+WORKDIR /home/neovim
+# Checkout to stable release branch.
+RUN git checkout stable
+## Create binaries
+RUN make CMAKE_BUILD_TYPE=RelWithDebInfo
+## Install neovim
+RUN make install
+
+# Go back to home directory
+WORKDIR /home
+## Setup dotfiles
+RUN mkdir -p /home/dotfiles
+#
+RUN git clone ${DOTFILE_REPO} /dotfiles
+#
+RUN mkdir -p ~/.config
+#
+RUN cp -r /dotfiles/nvim ~/.config/nvim
+#
+#WORKDIR /root
+
+CMD ["tail", "-f", "/dev/null"]

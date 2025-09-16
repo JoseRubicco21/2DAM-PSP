@@ -3,5 +3,6 @@ services:
     build: .
     hostname: psp-go
     volumes: 
-      - ./code/:/app
-    
+      - ../../code/:/app/
+
+
