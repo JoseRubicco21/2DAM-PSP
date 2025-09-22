@@ -6,13 +6,13 @@ RUN apt-get update && apt-get install -y \
     build-essential cmake git libboost-all-dev \
     libgmp-dev libmpfr-dev libssl-dev \
     pkg-config wget zlib1g-dev \
-    ninja-build gettext unzip curl
+    ninja-build gettext unzip curl clang
 
 #   cleanup:
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Multistage build for GoLang
-COPY --from=golang:1.13-alpine /usr/local/go/ /usr/local/go/
+COPY --from=golang:1.25 /usr/local/go/ /usr/local/go/
 ENV PATH="/usr/local/go/bin:${PATH}"
 
 # Get into root's home directory
@@ -33,11 +33,11 @@ WORKDIR /home
 ## Setup dotfiles
 RUN mkdir -p /home/dotfiles
 #
-RUN git clone ${DOTFILE_REPO} /dotfiles
+RUN git clone ${DOTFILE_REPO} ./dotfiles
 #
 RUN mkdir -p ~/.config
 #
-RUN cp -r /dotfiles/nvim ~/.config/nvim
+RUN cp -r ./dotfiles/nvim ~/.config/nvim
 #
 #WORKDIR /root
 
