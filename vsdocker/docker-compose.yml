@@ -1,0 +1,12 @@
+services:
+  code:
+    hostname: code
+    build:
+      context: ..
+      dockerfile: vsdocker/Dockerfile
+    container_name: code
+    volumes: 
+      - ../code:/home/code
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      - DISPLAY=${DISPLAY}
