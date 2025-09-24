@@ -8,5 +8,6 @@ services:
     volumes: 
       - ../code:/home/code
       - /tmp/.X11-unix:/tmp/.X11-unix
+      - ../.user-data:/home/.user-data
     environment:
       - DISPLAY=${DISPLAY}
