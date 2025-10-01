@@ -33,32 +33,25 @@ func displayInformation(age int, ageInBinary string, candles map[string]int, age
 	fmt.Printf("Age in seconds: %d \n", ageInSeconds)
 }
 
-func getInput() int {
-	fmt.Println("Introduce your age.")
+func getInput(message string) int {
+	fmt.Println(message)
 	var input int
 	fmt.Scanf("%d", &input)
 	return input
 }
 
-func ageToSeconds(ageInYears int) int64 {
-	const (
-		secondsPerMinute = 60
-		minutesPerHour   = 60
-		hoursPerDay      = 24
-		daysPerYear      = 365
-	)
-
-	secondsPerYear := int64(secondsPerMinute * minutesPerHour * hoursPerDay * daysPerYear)
-	return int64(ageInYears) * secondsPerYear
+func secondsToAge(ageInSeconds int) int64 {
+	return int64(float64(ageInSeconds) / 60 / 60 / 24 / 365)
 }
 
 func main() {
-	var age int = getInput()
-	var ageInSeconds = ageToSeconds(age)
-	ageInBinary := getBinaryAge(age)
+	var testCases int = getInput("Introduce the number of test cases")
 
-	candles := countCandles(ageInBinary)
-
-	displayInformation(age, ageInBinary, candles, ageInSeconds)
+	for range testCases {
+		var ageInput int = getInput("Intoduce your age in seconds")
+		ageInBinary := getBinaryAge(ageInput)
+		candles := countCandles(ageInBinary)
+		displayInformation(int(secondsToAge(ageInput)), ageInBinary, candles, int64(ageInput))
+	}
 
 }
